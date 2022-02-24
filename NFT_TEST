@@ -1,0 +1,73 @@
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+import '@openzeppelin/contracts/access/Ownable.sol';
+import '@openzeppelin/contracts/token/ERC721/ERC721.sol';
+import '@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol';
+
+contract NFT_test is ERC721, ERC721Enumerable, Ownable {
+  using Strings for uint256;
+  uint256 constant public MAX_SUPPLY = 10;
+  string private _baseURIExtended;
+
+  event TokenMinted(uint256 supply);
+
+  constructor() ERC721('NFT_test', 'NFTTest') {}
+
+  function getTotalSupply() public view returns (uint256) {
+    return totalSupply();
+  }
+
+  function getNFTtestByOwner(address _owner) public view returns (uint256[] memory) {
+    uint256 tokenCount = balanceOf(_owner);
+    uint256[] memory tokenIds = new uint256[](tokenCount);
+    for (uint256 i; i < tokenCount; i++) {
+      tokenIds[i] = tokenOfOwnerByIndex(_owner, i);
+    }
+    return tokenIds;
+  }
+
+  function mintSloths(uint numSloths) public  {
+    require(totalSupply() + numSloths <= MAX_SUPPLY, 'Sale would exceed max supply');
+    _mintSloth(numSloths, msg.sender);
+    emit TokenMinted(totalSupply());
+  }
+  
+  function _mintSloth(uint256 numSloths, address recipient) internal {
+    uint256 supply = totalSupply();
+    for (uint256 i = 0; i < numSloths; i++) {
+      _safeMint(recipient, supply + i);
+    }
+  }
+
+  function setBaseURI(string memory baseURI_) external onlyOwner {
+    _baseURIExtended = baseURI_;
+  }
+
+  function _baseURI() internal view virtual override returns (string memory) {
+    return _baseURIExtended;
+  }
+
+  function tokenURI(uint256 tokenId) public view virtual override returns (string memory) {
+    require(_exists(tokenId), 'ERC721Metadata: URI query for nonexistent token');  
+        return string(abi.encodePacked(_baseURI(), tokenId.toString(), ".json"));
+  }
+
+  function _beforeTokenTransfer(
+    address from,
+    address to,
+    uint256 tokenId
+  ) internal override(ERC721, ERC721Enumerable) {
+    super._beforeTokenTransfer(from, to, tokenId);
+  }
+
+  function supportsInterface(bytes4 interfaceId)
+    public
+    view
+    override(ERC721, ERC721Enumerable)
+    returns (bool)
+  {
+    return super.supportsInterface(interfaceId);
+  }
+}
+
