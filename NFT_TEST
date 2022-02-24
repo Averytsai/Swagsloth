@@ -27,15 +27,15 @@ contract NFT_test is ERC721, ERC721Enumerable, Ownable {
     return tokenIds;
   }
 
-  function mintSloths(uint numSloths) public  {
-    require(totalSupply() + numSloths <= MAX_SUPPLY, 'Sale would exceed max supply');
-    _mintSloth(numSloths, msg.sender);
+  function mintNfts(uint numNfts) public  {
+    require(totalSupply() + numNfts <= MAX_SUPPLY, 'Sale would exceed max supply');
+    _mintSloth(numNfts, msg.sender);
     emit TokenMinted(totalSupply());
   }
   
-  function _mintSloth(uint256 numSloths, address recipient) internal {
+  function _mintNft(uint256 numNfts, address recipient) internal {
     uint256 supply = totalSupply();
-    for (uint256 i = 0; i < numSloths; i++) {
+    for (uint256 i = 0; i < numNfts; i++) {
       _safeMint(recipient, supply + i);
     }
   }
