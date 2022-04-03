@@ -1297,16 +1297,16 @@ contract Sloth is ERC721, ERC721Enumerable, Ownable {
   event TokenMinted(uint256 supply);
 
   constructor() ERC721('Swag Sloth', 'SLOTH') {}
-//ok
+
   function flipWhiteListSaleActive() public onlyOwner {
     _isWhiteListSaleActive = !_isWhiteListSaleActive;
   }
-//ok
+  
   function flipSaleActive() public onlyOwner {
     _isSaleActive = !_isSaleActive;
   }
 
-//ok
+
   function setMintPrice(uint256 _mintPrice) public onlyOwner {
     mintPrice = _mintPrice;
   }
@@ -1316,29 +1316,29 @@ contract Sloth is ERC721, ERC721Enumerable, Ownable {
   }
 
 
-//ok
+
   function setWhiteList(address[] calldata _whiteList) external onlyOwner {
     for(uint i = 0; i < _whiteList.length; i++) {
       whiteList[_whiteList[i]] = maxwhitelistBalance;
     }
   }
 
-//ok
+
   function withdraw(address to) public onlyOwner {
     uint256 balance = address(this).balance;
     payable(to).transfer(balance);
   }
-//ok
+
   function preserveMint(uint numSloths, address to) public onlyOwner {
     require(totalSupply() + numSloths <= MAX_SUPPLY, 'Preserve mint would exceed max supply');
     _mintSloth(numSloths, to);
     emit TokenMinted(totalSupply());
   }
-//ok
+
   function getTotalSupply() public view returns (uint256) {
     return totalSupply();
   }
-//ok
+
   function getSlothByOwner(address _owner) public view returns (uint256[] memory) {
     uint256 tokenCount = balanceOf(_owner);
     uint256[] memory tokenIds = new uint256[](tokenCount);
@@ -1348,7 +1348,7 @@ contract Sloth is ERC721, ERC721Enumerable, Ownable {
     return tokenIds;
   }
 
-//ok
+
   function mintSloths(uint numSloths) public payable {
     require(_isSaleActive, 'Sale must be active to mint Sloths');
     require(totalSupply() + numSloths <= MAX_SUPPLY, 'Sale would exceed max supply');
@@ -1356,7 +1356,7 @@ contract Sloth is ERC721, ERC721Enumerable, Ownable {
     _mintSloth(numSloths, msg.sender);
     emit TokenMinted(totalSupply());
   }
-  //ok
+  
   function setRevealTimestamp(uint256 newRevealTimeStamp) external onlyOwner {
     revealTimeStamp = newRevealTimeStamp;
   }
@@ -1388,22 +1388,22 @@ contract Sloth is ERC721, ERC721Enumerable, Ownable {
     emit TokenMinted(totalSupply());
   }
 
-//ok
+
   function _mintSloth(uint256 numSloths, address recipient) internal {
     uint256 supply = totalSupply();
     for (uint256 i = 0; i < numSloths; i++) {
       _safeMint(recipient, supply + i);
     }
   }
-//ok
+
   function setBaseURI(string memory baseURI_) external onlyOwner {
     _baseURIExtended = baseURI_;
   }
-//ok
+
   function _baseURI() internal view virtual override returns (string memory) {
     return _baseURIExtended;
   }
-//ok
+
   function tokenURI(uint256 tokenId) public view virtual override returns (string memory) {
     require(_exists(tokenId), 'ERC721Metadata: URI query for nonexistent token');
     if (totalSupply() >= MAX_SUPPLY || block.timestamp >= revealTimeStamp) {
@@ -1413,12 +1413,11 @@ contract Sloth is ERC721, ERC721Enumerable, Ownable {
       return _preRevealURI;
     }
   }
-//ok
+
   function setPreRevealURI(string memory preRevealURI) external onlyOwner {
     _preRevealURI = preRevealURI;
   }
 
-//ok
   function _beforeTokenTransfer(
     address from,
     address to,
@@ -1426,7 +1425,7 @@ contract Sloth is ERC721, ERC721Enumerable, Ownable {
   ) internal override(ERC721, ERC721Enumerable) {
     super._beforeTokenTransfer(from, to, tokenId);
   }
-//ok
+
   function supportsInterface(bytes4 interfaceId)
     public
     view
