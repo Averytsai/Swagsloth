@@ -1267,7 +1267,6 @@ abstract contract ERC721Enumerable is ERC721, IERC721Enumerable {
 }
 
 
-
 pragma solidity ^0.8.0;
 
 //import '@openzeppelin/contracts/access/Ownable.sol';
