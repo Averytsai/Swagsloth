@@ -1,4 +1,8 @@
 /**
+ *Submitted for verification at Etherscan.io on 2022-04-03
+*/
+
+/**
  *Submitted for verification at Etherscan.io on 2022-01-28
 */
 
@@ -1284,14 +1288,15 @@ contract Sloth is ERC721, ERC721Enumerable, Ownable {
   uint256 constant public MAX_SUPPLY = 2022;
   uint256 public mintPrice = 0.08 ether;
   uint256 public whiteListPrice = 0.06 ether;
-  uint256 public maxwhitelistBalance = 2;
+  bool public iswhitelist = true;
+  uint256 public maxwhitelistBalance=2;
   uint256 public revealTimeStamp = block.timestamp+86400*14 ; 
 
 
   string private _baseURIExtended;
   string private _preRevealURI;
 
-  mapping(address => uint256) public whiteList;
+  mapping(address => bool) public whiteList;
   
 
   event TokenMinted(uint256 supply);
@@ -1319,7 +1324,7 @@ contract Sloth is ERC721, ERC721Enumerable, Ownable {
 
   function setWhiteList(address[] calldata _whiteList) external onlyOwner {
     for(uint i = 0; i < _whiteList.length; i++) {
-      whiteList[_whiteList[i]] = maxwhitelistBalance;
+      whiteList[_whiteList[i]] = iswhitelist;
     }
   }
 
@@ -1367,23 +1372,13 @@ contract Sloth is ERC721, ERC721Enumerable, Ownable {
     require(balanceOf(msg.sender) + numSloths <= maxwhitelistBalance, 'Sale would exceed max Whitelist balance');
     uint256 price = whiteListPrice;
     require(numSloths * price <= msg.value, 'Not enough ether sent');
-    if (whiteList[msg.sender] == 2) {
+    if (whiteList[msg.sender] == true) {
     price = whiteListPrice;
-    whiteList[msg.sender] = maxwhitelistBalance-numSloths;
+    whiteList[msg.sender] = false;
     } 
-    else if(whiteList[msg.sender] == 1){
-      require(numSloths == 1,'Something Wrong');
-      price = whiteListPrice;
-    whiteList[msg.sender] = 0;
-    }
-    else if(whiteList[msg.sender] == 0){
-      revert('You have no more whitelist');
-    }
     else  {
     revert('Not in white list');
     }
-    
-    
     _mintSloth(numSloths, msg.sender);
     emit TokenMinted(totalSupply());
   }
