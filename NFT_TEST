@@ -1395,7 +1395,7 @@ contract Sloth is ERC721, ERC721Enumerable, Ownable {
 
   function tokenURI(uint256 tokenId) public view virtual override returns (string memory) {
     require(_exists(tokenId), 'ERC721Metadata: URI query for nonexistent token');
-    if (totalSupply() >= MAX_SUPPLY || block.timestamp >= revealTimeStamp) {
+    if (block.timestamp >= revealTimeStamp) {
         return string(abi.encodePacked(_baseURI(), tokenId.toString(), ".json"));
     }
     {
